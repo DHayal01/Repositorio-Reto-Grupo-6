@@ -1,0 +1,65 @@
+#!/bin/bash
+set -e
+ 
+LOG_GROUP="/ec2/ubuntu24"
+REGION="us-east-1"
+ 
+apt update -y
+
+# Instalar SSM Agent en Ubuntu
+snap install amazon-ssm-agent --classic
+systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent.service
+systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
+
+apt install apache2 -y
+
+# Instalar CloudWatch Agent
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/download-CloudWatch-Agent-on-EC2-Instance-commandline-first.html
+wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb           
+dpkg -i amazon-cloudwatch-agent.deb
+ 
+# Crear configuración del agente
+cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<EOF
+{
+  "agent": {
+    "region": "$REGION"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/syslog",
+            "log_group_name": "$LOG_GROUP",
+            "log_stream_name": "{instance_id}",
+            "timezone": "UTC"
+          },
+          {
+            "file_path": "/var/log/apache2/error.log",
+            "log_group_name": "$LOG_GROUP",
+            "log_stream_name": "{instance_id}-apache",
+            "timezone": "UTC"
+          }
+        ]
+      }
+    }
+  }
+}
+EOF
+ 
+# Iniciar el agente Cloud Watch
+# El cloudwach sirve para ver los logs de tus instancias en la consola de AWS.
+# En un sitio centralizado en el que puedes hacer consultas.
+# Ej: coger logs del
+# /var/log/syslog 
+# /var/log/apache2/error.log o access.log
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -s
+ 
+# Habilitar el servicio
+systemctl enable amazon-cloudwatch-agent
+systemctl restart amazon-cloudwatch-agent
