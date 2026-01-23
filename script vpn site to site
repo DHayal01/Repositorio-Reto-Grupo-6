@@ -1,0 +1,16 @@
+#!/bin/bash
+DATE=$(date +%Y%m%d_%H%M)
+DIR="/tmp/backup_$DATE"
+REMOTE="usuario@192.168.1.50:/backups"
+
+mkdir -p "$DIR"
+rsync -avz /var/www/ "$DIR/"
+rsync -avz "$DIR/" $REMOTE
+
+if [ $? -eq 0 ]; then
+    echo "$(date): ✅ Backup OK" >> /var/log/backup.log
+else
+    echo "$(date): ❌ Backup FALLÓ" >> /var/log/backup.log
+fi
+
+rm -rf "$DIR"
