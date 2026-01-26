@@ -11,7 +11,7 @@ echo "Montando infraestructura de AWS ..."
 KEY_NAME="00000" #METE TU CONTRASEÑA!!!!!!!!
 VPC_NAME="vpc-edid-2025-grupo6"
 DB_SUBNET_GROUP_NAME="subnet-group-edid"
-RDS_INSTANCE_ID="mysql-db-edid-2025"
+#RDS_INSTANCE_ID="mysql-db-edid-2025"#esto no#
 REGION="us-east-1"
 AMI_ID="ami-04b4f1a9cf54c11d0" # Ubuntu Server 24.04 en us-east-1
 
@@ -151,7 +151,7 @@ aws ec2 authorize-security-group-ingress --group-id $SG_PGSQL_ID --protocol tcp 
 aws ec2 authorize-security-group-ingress --group-id $SG_PGSQL_ID --protocol tcp --port 5432 --source-group $SG_PROXY_ID
 
 # SG-RDS
-aws ec2 authorize-security-group-ingress --group-id $SG_RDS_ID --protocol tcp --port 3306 --source-group $SG_PROXY_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_RDS_ID --protocol tcp --port 3306 --source-group $SG_PROXY_ID#esto no#
 
 # ======================================
 # ALB Y TARGET GROUP PARA LOS PROXIES
@@ -339,36 +339,36 @@ aws elbv2 create-listener \
 # SUBRED PARA RDS
 # ===================
 
-echo "Creando grupo de subredes para RDS MySQL ..."
+#echo "Creando grupo de subredes para RDS MySQL ..."
 
-aws rds create-db-subnet-group \
-  --db-subnet-group-name "cms-db-subnet-group" \
-  --db-subnet-group-description "Grupo de subredes para RDS MySQL CMS" \
-  --subnet-ids $SUBNET_PRIVATE1_ID $SUBNET_PRIVATE2_ID \
-  --tags Key=Name,Value="cms-db-subnet-group"
+#aws rds create-db-subnet-group \
+# --db-subnet-group-name "cms-db-subnet-group" \
+#  --db-subnet-group-description "Grupo de subredes para RDS MySQL CMS" \
+#  --subnet-ids $SUBNET_PRIVATE1_ID $SUBNET_PRIVATE2_ID \
+#  --tags Key=Name,Value="cms-db-subnet-group"
 
 # =================
 # INSTANCIA RDS
 # =================
 
-echo "Creando instancia de RDS MySQL ..."
+3echo "Creando instancia de RDS MySQL ..."
 
-aws rds create-db-instance \
-  --db-instance-identifier "cms-database" \
-  --allocated-storage 20 \
-  --storage-type "gp2" \
-  --db-instance-class "db.t3.micro" \
-  --engine "mysql" \
-  --engine-version "8.0" \
-  --master-username "admin" \
-  --master-user-password "Admin123" \
-  --db-name "wordpress_db" \
-  --db-subnet-group-name "cms-db-subnet-group" \
-  --vpc-security-group-ids "$SG_RDS_ID" \
-  --publicly-accessible \
-  --tags Key=Name,Value="wordpress_db"
+#aws rds create-db-instance \
+#  --db-instance-identifier "cms-database" \
+#  --allocated-storage 20 \
+#  --storage-type "gp2" \
+#  --db-instance-class "db.t3.micro" \
+#  --engine "mysql" \
+#  --engine-version "8.0" \
+#  --master-username "admin" \
+#  --master-user-password "Admin123" \
+#  --db-name "wordpress_db" \
+#  --db-subnet-group-name "cms-db-subnet-group" \
+#  --vpc-security-group-ids "$SG_RDS_ID" \
+#  --publicly-accessible \
+#  --tags Key=Name,Value="wordpress_db"
 
-echo "Instancia RDS MySQL creada exitosamente."
+#echo "Instancia RDS MySQL creada exitosamente."
 
 # ============================
 # AWS WAF: WEB ACL + ASOCIACIÓN
@@ -402,3 +402,4 @@ aws wafv2 associate-web-acl \
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
+
