@@ -35,7 +35,7 @@ chmod 400 $KEY_NAME.pem
 echo "Creando VPC y Subredes en 2 zonas de disponibilidad ..."
 
 VPC_ID=$(aws ec2 create-vpc \
-  --cidr-block 10.212.0.0/16 \
+  --cidr-block 192.168.0.0/16 \
   --query 'Vpc.VpcId' \
   --output text)
 
@@ -48,40 +48,40 @@ aws ec2 create-tags \
 
 SUBNET_PUBLIC1_ID=$(aws ec2 create-subnet \
   --vpc-id $VPC_ID \
-  --cidr-block 10.212.1.0/24 \
+  --cidr-block 192.168.100.0/24 \
   --availability-zone ${REGION}a \
   --query 'Subnet.SubnetId' \
   --output text)
 
-SUBNET_PUBLIC2_ID=$(aws ec2 create-subnet \
-  --vpc-id $VPC_ID \
-  --cidr-block 10.212.2.0/24 \
-  --availability-zone ${REGION}b \
-  --query 'Subnet.SubnetId' \
-  --output text)
+#SUBNET_PUBLIC2_ID=$(aws ec2 create-subnet \
+#  --vpc-id $VPC_ID \
+#  --cidr-block 192.168.101.0/24 \
+#  --availability-zone ${REGION}b \
+#  --query 'Subnet.SubnetId' \
+#  --output text)
 
 SUBNET_PRIVATE1_ID=$(aws ec2 create-subnet \
   --vpc-id $VPC_ID \
-  --cidr-block 10.212.3.0/24 \
+  --cidr-block 192.168.101.0/24 \
   --availability-zone ${REGION}a \
   --query 'Subnet.SubnetId' \
   --output text)
 
 SUBNET_PRIVATE2_ID=$(aws ec2 create-subnet \
   --vpc-id $VPC_ID \
-  --cidr-block 10.212.4.0/24 \
+  --cidr-block 192.168.102.0/24 \
   --availability-zone ${REGION}b \
   --query 'Subnet.SubnetId' \
   --output text)
 
 aws ec2 create-tags --resources $SUBNET_PUBLIC1_ID --tags Key=Name,Value="Subnet-Publica-1"
-aws ec2 create-tags --resources $SUBNET_PUBLIC2_ID --tags Key=Name,Value="Subnet-Publica-2"
+#aws ec2 create-tags --resources $SUBNET_PUBLIC2_ID --tags Key=Name,Value="Subnet-Publica-2"
 aws ec2 create-tags --resources $SUBNET_PRIVATE1_ID --tags Key=Name,Value="Subnet-Privada-1"
 aws ec2 create-tags --resources $SUBNET_PRIVATE2_ID --tags Key=Name,Value="Subnet-Privada-2"
 
 echo "Se han creado las siguientes subredes: "
 echo " - Pública 1: $SUBNET_PUBLIC1_ID"
-echo " - Pública 2: $SUBNET_PUBLIC2_ID"
+#echo " - Pública 2: $SUBNET_PUBLIC2_ID"
 echo " - Privada 1: $SUBNET_PRIVATE1_ID"
 echo " - Privada 2: $SUBNET_PRIVATE2_ID"
 
@@ -112,23 +112,23 @@ SG_PROXY_ID=$(aws ec2 create-security-group \
   --query 'GroupId' \
   --output text)
 
-SG_XMPP_ID=$(aws ec2 create-security-group \
-  --group-name SG-XMPP \
-  --description "XMPP ejabberd" \
+#SG_XMPP_ID=$(aws ec2 create-security-group \
+#  --group-name SG-XMPP \
+#  --description "XMPP ejabberd" \
+#  --vpc-id $VPC_ID \
+#  --query 'GroupId' \
+#  --output text)
+
+SG_SQL_ID=$(aws ec2 create-security-group \
+  --group-name SG-SQL \
+  --description "SQL en EC2" \
   --vpc-id $VPC_ID \
   --query 'GroupId' \
   --output text)
 
-SG_PGSQL_ID=$(aws ec2 create-security-group \
-  --group-name SG-PostgreSQL \
-  --description "PostgreSQL en EC2" \
-  --vpc-id $VPC_ID \
-  --query 'GroupId' \
-  --output text)
-
-SG_RDS_ID=$(aws ec2 create-security-group \
-  --group-name SG-RDS \
-  --description "RDS MySQL" \
+SG_WEB_ID=$(aws ec2 create-security-group \
+  --group-name SG-WEB \
+  --description "Servidor WEB" \
   --vpc-id $VPC_ID \
   --query 'GroupId' \
   --output text)
@@ -139,20 +139,21 @@ aws ec2 authorize-security-group-ingress --group-id $SG_PROXY_ID --protocol tcp 
 aws ec2 authorize-security-group-ingress --group-id $SG_PROXY_ID --protocol tcp --port 22  --cidr 0.0.0.0/0
 
 # SG-XMPP: solo tráfico interno
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5222 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5223 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5269 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5282 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5443 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 22   --source-group $SG_PROXY_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5222 --source-group $SG_XMPP_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5223 --source-group $SG_XMPP_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5269 --source-group $SG_XMPP_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5282 --source-group $SG_XMPP_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 5443 --source-group $SG_XMPP_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_XMPP_ID --protocol tcp --port 22   --source-group $SG_PROXY_ID
 
-# SG-PostgreSQL
-aws ec2 authorize-security-group-ingress --group-id $SG_PGSQL_ID --protocol tcp --port 5432 --source-group $SG_XMPP_ID
-aws ec2 authorize-security-group-ingress --group-id $SG_PGSQL_ID --protocol tcp --port 5432 --source-group $SG_PROXY_ID
+# SG-SQL
+aws ec2 authorize-security-group-ingress --group-id $SG_SQL_ID --protocol tcp --port 3306 --source-group $SG_WEB_ID
+#aws ec2 authorize-security-group-ingress --group-id $SG_SQL_ID --protocol tcp --port 5432 --source-group $SG_PROXY_ID
 
-# SG-RDS
-#aws ec2 authorize-security-group-ingress --group-id $SG_RDS_ID --protocol tcp --port 3306 --source-group $SG_PROXY_ID#esto no#
-
+# SG-WEB
+aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --port 80  --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --port 443 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --port 22  --cidr 192.168.0.0/16
 # ======================================
 # ALB Y TARGET GROUP PARA LOS PROXIES
 # ======================================
@@ -161,7 +162,7 @@ echo "Creando Application Load Balancer..."
 
 ALB_ARN=$(aws elbv2 create-load-balancer \
   --name alb-edid-2025 \
-  --subnets $SUBNET_PUBLIC1_ID $SUBNET_PUBLIC2_ID \
+  --subnets $SUBNET_PUBLIC1_ID \
   --security-groups $SG_PROXY_ID \
   --scheme internet-facing \
   --type application \
@@ -215,13 +216,13 @@ echo "Target Group creado: $TG_ARN"
 
 echo "Creando instancias EC2 ..."
 
-# Proxy Nginx 1 y 2 (IP pública)
+# Proxy Nginx 1 (IP pública)
 INSTANCE_PROXY1_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
   --subnet-id $SUBNET_PUBLIC1_ID \
-  --private-ip-address 10.212.1.10 \
+  --private-ip-address 192.168.100.10 \
   --security-group-ids $SG_PROXY_ID \
   --associate-public-ip-address \
   --query 'Instances[0].InstanceId' \
@@ -231,91 +232,79 @@ aws ec2 create-tags \
   --resources $INSTANCE_PROXY1_ID \
   --tags Key=Name,Value="Proxyinverso1"
 
-INSTANCE_PROXY2_ID=$(aws ec2 run-instances \
-  --image-id $AMI_ID \
-  --instance-type t2.micro \
-  --key-name $KEY_NAME \
-  --subnet-id $SUBNET_PUBLIC2_ID \
-  --private-ip-address 10.212.2.10 \
-  --security-group-ids $SG_PROXY_ID \
-  --associate-public-ip-address \
-  --query 'Instances[0].InstanceId' \
-  --output text)
+#INSTANCE_PROXY2_ID=$(aws ec2 run-instances \
+#  --image-id $AMI_ID \
+#  --instance-type t2.micro \
+#  --key-name $KEY_NAME \
+#  --subnet-id $SUBNET_PUBLIC2_ID \
+#  --private-ip-address 10.212.2.10 \
+#  --security-group-ids $SG_PROXY_ID \
+# --associate-public-ip-address \
+#  --query 'Instances[0].InstanceId' \
+#  --output text)
 
-aws ec2 create-tags \
-  --resources $INSTANCE_PROXY2_ID \
-  --tags Key=Name,Value="Proxyinverso2"
+#aws ec2 create-tags \
+#  --resources $INSTANCE_PROXY2_ID \
+#  --tags Key=Name,Value="Proxyinverso2"
 
-# XMPP Servers
-INSTANCE_XMPP1_ID=$(aws ec2 run-instances \
-  --image-id $AMI_ID \
-  --instance-type t2.micro \
-  --key-name $KEY_NAME \
-  --subnet-id $SUBNET_PRIVATE1_ID \
-  --private-ip-address 10.212.3.10 \
-  --security-group-ids $SG_XMPP_ID \
-  --query 'Instances[0].InstanceId' \
-  --output text)
-
-aws ec2 create-tags \
-  --resources $INSTANCE_XMPP1_ID \
-  --tags Key=Name,Value="Mensajeria1"
-
-INSTANCE_XMPP2_ID=$(aws ec2 run-instances \
+# WEB Servers
+INSTANCE_WEB1_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
   --subnet-id $SUBNET_PRIVATE1_ID \
-  --private-ip-address 10.212.3.20 \
-  --security-group-ids $SG_XMPP_ID \
+  --private-ip-address 192.168.101.2 \
+  --security-group-ids $SG_WEB_ID \
   --query 'Instances[0].InstanceId' \
   --output text)
 
 aws ec2 create-tags \
-  --resources $INSTANCE_XMPP2_ID \
-  --tags Key=Name,Value="Mensajeria2"
+  --resources $INSTANCE_WEB1_ID \
+  --tags Key=Name,Value="web1"
 
-# PostgreSQL
-INSTANCE_PGSQL_ID=$(aws ec2 run-instances \
-  --image-id $AMI_ID \
-  --instance-type t2.micro \
-  --key-name $KEY_NAME \
-  --subnet-id $SUBNET_PRIVATE1_ID \
-  --private-ip-address 10.212.3.30 \
-  --security-group-ids $SG_PGSQL_ID \
-  --query 'Instances[0].InstanceId' \
-  --output text)
-
-aws ec2 create-tags \
-  --resources $INSTANCE_PGSQL_ID \
-  --tags Key=Name,Value="Postgresql"
-
-# Servidores de Soporte
-INSTANCE_SOPORTE1_ID=$(aws ec2 run-instances \
+INSTANCE_WEB2_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
   --subnet-id $SUBNET_PRIVATE2_ID \
-  --private-ip-address 10.212.4.10 \
+  --private-ip-address 192.168.102.2 \
+  --security-group-ids $SG_WEB_ID \
   --query 'Instances[0].InstanceId' \
   --output text)
 
 aws ec2 create-tags \
-  --resources $INSTANCE_SOPORTE1_ID \
-  --tags Key=Name,Value="Soporte1"
+  --resources $INSTANCE_WEB2_ID \
+  --tags Key=Name,Value="web2"
 
-INSTANCE_SOPORTE2_ID=$(aws ec2 run-instances \
+# MySQL1
+INSTANCE_PGSQL1_ID=$(aws ec2 run-instances \
+  --image-id $AMI_ID \
+  --instance-type t2.micro \
+  --key-name $KEY_NAME \
+  --subnet-id $SUBNET_PRIVATE1_ID \
+  --private-ip-address 192.168.101.3 \
+  --security-group-ids $SG_SQL_ID \
+  --query 'Instances[0].InstanceId' \
+  --output text)
+
+aws ec2 create-tags \
+  --resources $INSTANCE_SQL_ID \
+  --tags Key=Name,Value="mysql1"
+
+# MySQL 2
+INSTANCE_PGSQL2_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
   --subnet-id $SUBNET_PRIVATE2_ID \
-  --private-ip-address 10.212.4.20 \
+  --private-ip-address 192.168.102.3 \
+  --security-group-ids $SG_SQL_ID \
   --query 'Instances[0].InstanceId' \
   --output text)
 
 aws ec2 create-tags \
-  --resources $INSTANCE_SOPORTE2_ID \
-  --tags Key=Name,Value="Soporte2"
+  --resources $INSTANCE_SQL_ID \
+  --tags Key=Name,Value="Mysql2"
 
 # ======================================
 # REGISTRAR PROXIES EN TG Y LISTENER
@@ -325,7 +314,7 @@ echo "Registrando instancias Proxy en el Target Group..."
 
 aws elbv2 register-targets \
   --target-group-arn $TG_ARN \
-  --targets Id=$INSTANCE_PROXY1_ID Id=$INSTANCE_PROXY2_ID
+  --targets Id=$INSTANCE_PROXY1_ID
 
 echo "Creando listener HTTP en el ALB..."
 
@@ -402,4 +391,5 @@ aws wafv2 associate-web-acl \
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
+
 
