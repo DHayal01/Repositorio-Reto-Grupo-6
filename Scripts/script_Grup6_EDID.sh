@@ -8,7 +8,7 @@ echo "Montando infraestructura de AWS ..."
 # VARIABLES GLOBALES
 # =======================
 
-KEY_NAME="5" #METE TU CONTRASEÑA!!!!!!!!
+KEY_NAME="6" #METE TU CONTRASEÑA!!!!!!!!
 VPC_NAME="vpc-edid-2025-grupo6"
 DB_SUBNET_GROUP_NAME="subnet-group-edid"
 REGION="us-east-1"
@@ -126,6 +126,14 @@ SG_WEB_ID=$(aws ec2 create-security-group \
   --query 'GroupId' \
   --output text)
 
+  SG_RDS_ID=$(aws ec2 create-security-group \
+  --group-name SG-RDS \
+  --description "RDS MySQL" \
+  --vpc-id $VPC_ID \
+  --query 'GroupId' \
+  --output text)
+
+
 # SG-Proxy: HTTP, HTTPS, SSH abiertos (para demo)
 aws ec2 authorize-security-group-ingress --group-id $SG_PROXY_ID --protocol tcp --port 80  --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id $SG_PROXY_ID --protocol tcp --port 443 --cidr 0.0.0.0/0
@@ -142,61 +150,11 @@ aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --
 aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --port 443 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id $SG_WEB_ID --protocol tcp --port 22  --cidr 192.168.0.0/16
 
-# ======================================
-# ALB Y TARGET GROUP PARA LOS PROXIES
-# ======================================
-
-echo "Creando Application Load Balancer..."
-
-ALB_ARN=$(aws elbv2 create-load-balancer \
-  --name alb-edid-2025 \
-  --subnets $SUBNET_PUBLIC1_ID $SUBNET_PUBLIC2_ID \
-  --security-groups $SG_PROXY_ID \
-  --scheme internet-facing \
-  --type application \
-  --ip-address-type ipv4 \
-  --query 'LoadBalancers[0].LoadBalancerArn' \
-  --output text)
+# SG-RDS
+aws ec2 authorize-security-group-ingress --group-id $SG_RDS_ID --protocol tcp --port 3306 --source-group $SG_PROXY_ID
 
 
-echo "ALB creado: $ALB_ARN"
-HC_PATH="/"
 
-echo "Creando Target Group para los proxies..."
-
-# Crear archivo JSON temporal con health check path
-cat > temp-tg.json << 'EOF'
-{
-  "Name": "tg-proxie-edid-2025",
-  "Protocol": "HTTP",
-  "Port": 80,
-  "VpcId": "",
-  "TargetType": "instance",
-  "HealthCheckProtocol": "HTTP",
-  "HealthCheckPath": "/",
-  "HealthCheckIntervalSeconds": 30,
-  "HealthCheckTimeoutSeconds": 5,
-  "HealthyThresholdCount": 5,
-  "UnhealthyThresholdCount": 2
-}
-EOF
-
-# Sustituir VPC_ID en el JSON
-sed -i "s|\"VpcId\": \"\",|\"VpcId\": \"$VPC_ID\",|" temp-tg.json
-
-TG_ARN=$(aws elbv2 create-target-group \
-  --cli-input-json file://temp-tg.json \
-  --query 'TargetGroups[0].TargetGroupArn' \
-  --output text)
-
-# Limpiar archivo temporal
-rm temp-tg.json
-
-if [ -z "$TG_ARN" ]; then
-  echo "ERROR: No se ha podido crear el Target Group."
-  exit 1
-fi
-echo "Target Group creado: $TG_ARN"
 # ==================
 # INSTANCIAS EC2
 # ==================
@@ -219,26 +177,40 @@ aws ec2 create-tags \
   --resources $INSTANCE_PROXY1_ID \
   --tags Key=Name,Value="Proxyinverso1"
 
+# ===================
+# SUBRED PARA RDS
+# ===================
 
-# ======================================
-# REGISTRAR PROXIES EN TG Y LISTENER
-# ======================================
+echo "Creando grupo de subredes para RDS MySQL ..."
 
-echo "Registrando instancias Proxy en el Target Group..."
+aws rds create-db-subnet-group \
+ --db-subnet-group-name "cms-db-subnet-group" \
+  --db-subnet-group-description "Grupo de subredes para RDS MySQL CMS" \
+  --subnet-ids $SUBNET_PRIVATE1_ID $SUBNET_PRIVATE2_ID \
+  --tags Key=Name,Value="cms-db-subnet-group"
 
-sleep 120
+# =================
+# INSTANCIA RDS
+# =================
 
-aws elbv2 register-targets \
-  --target-group-arn $TG_ARN \
-  --targets Id=$INSTANCE_PROXY1_ID
+echo "Creando instancia de RDS MySQL ..."
 
-echo "Creando listener HTTP en el ALB..."
+aws rds create-db-instance \
+  --db-instance-identifier "cms-database" \
+  --allocated-storage 20 \
+  --storage-type "gp2" \
+  --db-instance-class "db.t3.micro" \
+  --engine "mysql" \
+  --engine-version "8.0" \
+  --master-username "admin" \
+  --master-user-password "Admin123" \
+  --db-name "wordpress_db" \
+  --db-subnet-group-name "cms-db-subnet-group" \
+  --vpc-security-group-ids "$SG_RDS_ID" \
+  --publicly-accessible \
+  --tags Key=Name,Value="wordpress_db"
 
-aws elbv2 create-listener \
-  --load-balancer-arn $ALB_ARN \
-  --protocol HTTP \
-  --port 80 \
-  --default-actions Type=forward,TargetGroupArn=$TG_ARN
+echo "Instancia RDS MySQL creada exitosamente."
 
 # ============================
 # AWS WAF: WEB ACL + ASOCIACIÓN
@@ -260,14 +232,6 @@ if [ -z "$WEB_ACL_ARN" ]; then
   echo "ERROR: No se ha podido crear el Web ACL."
   exit 1
 fi
-echo "Esperando programacion del Web ACL(2min)"
-sleep 120
-echo "Asociando Web ACL al ALB..."
-
-aws wafv2 associate-web-acl \
-  --region $REGION \
-  --web-acl-arn "$WEB_ACL_ARN" \
-  --resource-arn "$ALB_ARN"
 
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
