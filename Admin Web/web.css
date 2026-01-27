@@ -1,52 +1,73 @@
 .arriba {
     color: seagreen;
     font-weight: bold;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
 }
+
 .cabecera {
     text-align: center;
-    background-color: rgb(255, 255, 255);
-    padding: 20px;
-    margin-bottom: 100px;
+    background-color: rgb(30, 123, 38);
+    padding: clamp(15px, 3vw, 30px);
     position: relative;
+    -webkit-text-stroke: 0.5px black;
+    width: 100%;
+    min-height: clamp(80px, 15vw, 120px);
 }
+
 .inicio {
     background-color: transparent;
     color: seagreen;
     position: absolute;
-    right: 550px; 
-    top: 30px;     
-    padding: 20px 40px;
-    font-size: x-large;
+    right: clamp(200px, 20vw, 300px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px);
+    font-size: clamp(1rem, 3vw, 2rem);
+    text-shadow: 2px 2px 4px black;
+    font-weight: bolder;
     border: none;
-    font-weight: bold;
+    -webkit-text-stroke: clamp(0.5px, 0.15vw, 1px) black;
+    white-space: nowrap;
+    right: 650px;
 }
+
 .inicio:hover, .contrata:hover {
     background-color: seagreen;
     color: white;
     cursor: pointer;
 }
+
 .contrata {
     background-color: transparent;
     color: seagreen;
     position: absolute;
-    right: 250px;  
-    top: 30px;     
-    padding: 20px 40px;
-    font-size: x-large;
+    right: clamp(20px, 3vw, 50px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px);
+    font-size: clamp(1rem, 3vw, 2rem);
     border: none;
-    font-weight: bold;
+    text-shadow: 2px 2px 4px black;
+    font-weight: bolder;
+    -webkit-text-stroke: clamp(0.5px, 0.15vw, 1px) black;
+    white-space: nowrap;
+    right: 350px;
 }
+
 .intro {
     text-align: left;
-    font-size: xx-large;
+    font-size: clamp(1.3rem, 4vw, 2rem);
     font-weight: bold;
-    margin-top: 100px;
-    margin-left: 25px;
+    margin-top: clamp(30px, 5vw, 50px);
+    margin-left: clamp(15px, 3vw, 25px);
+    margin-right: clamp(15px, 3vw, 25px);
 }
+
 .parrafo1 {
-    font-size: large;
-    margin-top: 20px;
-    margin-left: 25px;
-    margin-right: 100px;
+    font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+    margin-top: clamp(15px, 3vw, 20px);
+    margin-left: clamp(15px, 3vw, 25px);
+    margin-right: clamp(15px, 10vw, 100px);
     font-family: Lora, serif;
+    line-height: 1.6;
 }
