@@ -53,12 +53,12 @@ SUBNET_PUBLIC1_ID=$(aws ec2 create-subnet \
   --query 'Subnet.SubnetId' \
   --output text)
 
-#SUBNET_PUBLIC2_ID=$(aws ec2 create-subnet \
-#  --vpc-id $VPC_ID \
-#  --cidr-block 192.168.101.0/24 \
-#  --availability-zone ${REGION}b \
-#  --query 'Subnet.SubnetId' \
-#  --output text)
+SUBNET_PUBLIC2_ID=$(aws ec2 create-subnet \
+  --vpc-id $VPC_ID \
+  --cidr-block 192.168.105.0/24 \
+  --availability-zone ${REGION}b \
+  --query 'Subnet.SubnetId' \
+  --output text)
 
 SUBNET_PRIVATE1_ID=$(aws ec2 create-subnet \
   --vpc-id $VPC_ID \
@@ -162,7 +162,12 @@ echo "Creando Application Load Balancer..."
 
 ALB_ARN=$(aws elbv2 create-load-balancer \
   --name alb-edid-2025 \
-  --subnets $SUBNET_PUBLIC1_ID \
+  --subnets $SUBNET_PUBLIC1_ID $SUBNET_PUBLIC2_ID \
+  --vpc-id $VPC_ID \
+  --cidr-block 192.168.101.0/24 \
+  --availability-zone ${REGION}b \
+  --query 'Subnet.SubnetId' \
+  --output text)\
   --security-groups $SG_PROXY_ID \
   --scheme internet-facing \
   --type application \
@@ -396,6 +401,7 @@ aws wafv2 associate-web-acl \
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
+
 
 
 
