@@ -1,5 +1,5 @@
 .arriba {
-    color: seagreen;
+    color: rgb(106, 224, 158);
     font-weight: bold;
     font-size: clamp(1.5rem, 5vw, 2.5rem);
 }
@@ -9,14 +9,14 @@
     background-color: rgb(30, 123, 38);
     padding: clamp(15px, 3vw, 30px);
     position: relative;
-    -webkit-text-stroke: 0.5px black;
+    -webkit-text-stroke: 0.75px black;
     width: 100%;
     min-height: clamp(80px, 15vw, 120px);
 }
 
 .inicio {
     background-color: transparent;
-    color: seagreen;
+    color: rgb(106, 224, 158);
     position: absolute;
     right: clamp(200px, 20vw, 300px);
     top: 50%;
@@ -32,14 +32,14 @@
 }
 
 .inicio:hover, .contrata:hover {
-    background-color: seagreen;
+    background-color: rgb(106, 224, 158);
     color: white;
     cursor: pointer;
 }
 
 .contrata {
     background-color: transparent;
-    color: seagreen;
+    color: rgb(106, 224, 158);
     position: absolute;
     right: clamp(20px, 3vw, 50px);
     top: 50%;
@@ -70,4 +70,11 @@
     margin-right: clamp(15px, 10vw, 100px);
     font-family: Lora, serif;
     line-height: 1.6;
+}
+.logo {
+    position: absolute;
+    left: 250px;
+    height: auto;
+    width: auto;
+    top: 0px;
 }
