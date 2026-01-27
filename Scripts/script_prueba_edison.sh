@@ -225,6 +225,7 @@ INSTANCE_PROXY1_ID=$(aws ec2 run-instances \
   --private-ip-address 192.168.100.10 \
   --security-group-ids $SG_PROXY_ID \
   --associate-public-ip-address \
+  --user-data file://SessionManager.sh \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -255,6 +256,7 @@ INSTANCE_WEB1_ID=$(aws ec2 run-instances \
   --subnet-id $SUBNET_PRIVATE1_ID \
   --private-ip-address 192.168.101.2 \
   --security-group-ids $SG_WEB_ID \
+  --user-data file://SessionManager.sh \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -269,6 +271,7 @@ INSTANCE_WEB2_ID=$(aws ec2 run-instances \
   --subnet-id $SUBNET_PRIVATE2_ID \
   --private-ip-address 192.168.102.2 \
   --security-group-ids $SG_WEB_ID \
+  --user-data file://SessionManager.sh \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -284,6 +287,7 @@ INSTANCE_SQL1_ID=$(aws ec2 run-instances \
   --subnet-id $SUBNET_PRIVATE1_ID \
   --private-ip-address 192.168.101.3 \
   --security-group-ids $SG_SQL1_ID \
+  --user-data file://SessionManager.sh \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -299,6 +303,7 @@ INSTANCE_SQL2_ID=$(aws ec2 run-instances \
   --subnet-id $SUBNET_PRIVATE2_ID \
   --private-ip-address 192.168.102.3 \
   --security-group-ids $SG_SQL_ID \
+  --user-data file://SessionManager.sh \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -391,6 +396,7 @@ aws wafv2 associate-web-acl \
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
+
 
 
 
