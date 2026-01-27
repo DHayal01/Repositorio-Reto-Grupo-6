@@ -6,26 +6,47 @@
     text-align: center;
     background-color: rgb(255, 255, 255);
     padding: 20px;
+    margin-bottom: 100px;
+    position: relative;
 }
 .inicio {
     background-color: transparent;
     color: seagreen;
     position: absolute;
-    right: 600;
-    top: 30;
+    right: 550px; 
+    top: 30px;     
     padding: 20px 40px;
     font-size: x-large;
     border: none;
     font-weight: bold;
 }
+.inicio:hover, .contrata:hover {
+    background-color: seagreen;
+    color: white;
+    cursor: pointer;
+}
 .contrata {
-background-color: transparent;
+    background-color: transparent;
     color: seagreen;
     position: absolute;
-    right: 350;
-    top: 30;
+    right: 250px;  
+    top: 30px;     
     padding: 20px 40px;
     font-size: x-large;
     border: none;
     font-weight: bold;
+}
+.intro {
+    text-align: left;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-top: 100px;
+    margin-left: 25px;
+}
+.parrafo1 {
+    font-size: large;
+    margin-top: 20px;
+    margin-left: 25px;
+    margin-right: 100px;
+    font-family: Lora, serif;
 }
