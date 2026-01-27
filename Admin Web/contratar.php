@@ -1,4 +1,23 @@
 <html>
+    <head>
+    <link rel="stylesheet" href="web.css">
+    <meta charset="UTF-8">
+    </head>
+    <body>
+    <div class="cabecera">
+    <h1 class="arriba">Bienvenido a EDID Solutions</h1>
+    <a href="web.html">
+    <button type="button" class="inicio">Inicio</button>
+    </a>
+    <a href="contratar.php">
+    <button type="button" class="contrata">Contrátanos</button>
+    </a>
+    <a href="quienes_somos.html">
+    <button type="button" class="quienes_somos">Quiénes somos</button>
+    </a>
+    <img src="logo.png" class="logo">
+    </div>
+    </body>
 </html>
 <?php
 ?>

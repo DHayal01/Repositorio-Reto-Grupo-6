@@ -28,10 +28,10 @@
     border: none;
     -webkit-text-stroke: clamp(0.5px, 0.15vw, 1px) black;
     white-space: nowrap;
-    right: 650px;
+    right: 750px;
 }
 
-.inicio:hover, .contrata:hover {
+.inicio:hover, .contrata:hover, .quienes_somos:hover {
     background-color: rgb(106, 224, 158);
     color: white;
     cursor: pointer;
@@ -51,7 +51,7 @@
     font-weight: bolder;
     -webkit-text-stroke: clamp(0.5px, 0.15vw, 1px) black;
     white-space: nowrap;
-    right: 350px;
+    right: 100px;
 }
 
 .intro {
@@ -77,4 +77,20 @@
     height: auto;
     width: auto;
     top: 0px;
+}
+.quienes_somos {
+    background-color: transparent;
+    color: rgb(106, 224, 158);
+    position: absolute;
+    right: clamp(200px, 20vw, 300px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px);
+    font-size: clamp(1rem, 3vw, 2rem);
+    text-shadow: 2px 2px 4px black;
+    font-weight: bolder;
+    border: none;
+    -webkit-text-stroke: clamp(0.5px, 0.15vw, 1px) black;
+    white-space: nowrap;
+    right: 400px;
 }
