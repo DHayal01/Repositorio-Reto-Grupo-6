@@ -2,6 +2,7 @@
     color: #0cd1da;
     font-weight: bold;
     font-size: clamp(1.5rem, 5vw, 2.5rem);
+    text-shadow: 2px 2px 4px black;
 }
 
 .cabecera {
@@ -12,6 +13,7 @@
     -webkit-text-stroke: 0.75px black;
     width: 100%;
     min-height: clamp(80px, 15vw, 120px);
+    
 }
 
 .inicio {
