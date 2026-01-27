@@ -1,12 +1,12 @@
 .arriba {
-    color: rgb(106, 224, 158);
+    color: #0cd1da;
     font-weight: bold;
     font-size: clamp(1.5rem, 5vw, 2.5rem);
 }
 
 .cabecera {
     text-align: center;
-    background-color: rgb(30, 123, 38);
+    background-color: #032c52;
     padding: clamp(15px, 3vw, 30px);
     position: relative;
     -webkit-text-stroke: 0.75px black;
@@ -16,7 +16,7 @@
 
 .inicio {
     background-color: transparent;
-    color: rgb(106, 224, 158);
+    color: #0cd1da;
     position: absolute;
     right: clamp(200px, 20vw, 300px);
     top: 50%;
@@ -32,14 +32,14 @@
 }
 
 .inicio:hover, .contrata:hover, .quienes_somos:hover {
-    background-color: rgb(106, 224, 158);
+    background-color: #0cd1da;
     color: white;
     cursor: pointer;
 }
 
 .contrata {
     background-color: transparent;
-    color: rgb(106, 224, 158);
+    color: #0cd1da;
     position: absolute;
     right: clamp(20px, 3vw, 50px);
     top: 50%;
@@ -80,7 +80,7 @@
 }
 .quienes_somos {
     background-color: transparent;
-    color: rgb(106, 224, 158);
+    color: #0cd1da;
     position: absolute;
     right: clamp(200px, 20vw, 300px);
     top: 50%;

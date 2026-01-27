@@ -6,7 +6,7 @@
     <body>
     <div class="cabecera">
     <h1 class="arriba">Bienvenido a EDID Solutions</h1>
-    <a href="web.html">
+    <a href="index.html">
     <button type="button" class="inicio">Inicio</button>
     </a>
     <a href="contratar.php">
@@ -15,7 +15,7 @@
     <a href="quienes_somos.html">
     <button type="button" class="quienes_somos">Quiénes somos</button>
     </a>
-    <img src="logo.png" class="logo">
+    <img src="logo_sin_texto.png" class="logo">
     </div>
     <div class="formulario">
     <form action="procesar_contratacion.php" method="post">
