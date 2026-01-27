@@ -277,13 +277,13 @@ aws ec2 create-tags \
   --tags Key=Name,Value="web2"
 
 # MySQL1
-INSTANCE_PGSQL1_ID=$(aws ec2 run-instances \
+INSTANCE_SQL1_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
   --subnet-id $SUBNET_PRIVATE1_ID \
   --private-ip-address 192.168.101.3 \
-  --security-group-ids $SG_SQL_ID \
+  --security-group-ids $SG_SQL1_ID \
   --query 'Instances[0].InstanceId' \
   --output text)
 
@@ -292,7 +292,7 @@ aws ec2 create-tags \
   --tags Key=Name,Value="mysql1"
 
 # MySQL 2
-INSTANCE_PGSQL2_ID=$(aws ec2 run-instances \
+INSTANCE_SQL2_ID=$(aws ec2 run-instances \
   --image-id $AMI_ID \
   --instance-type t2.micro \
   --key-name $KEY_NAME \
@@ -303,7 +303,7 @@ INSTANCE_PGSQL2_ID=$(aws ec2 run-instances \
   --output text)
 
 aws ec2 create-tags \
-  --resources $INSTANCE_SQL_ID \
+  --resources $INSTANCE_SQL2_ID \
   --tags Key=Name,Value="Mysql2"
 
 # ======================================
@@ -391,5 +391,6 @@ aws wafv2 associate-web-acl \
 echo "✅ WAF asociado al ALB correctamente"
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
+
 
 
