@@ -1,0 +1,27 @@
+.arriba {
+    color: seagreen;
+    font-weight: bold;
+}
+.cabecera {
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+}
+.inicio {
+    background-color: rgb(0, 0, 0);
+    color: rgb(0, 0, 255);
+    position: absolute;
+    right: 600;
+    top: 30;
+    padding: 20px 40px;
+    font-size: x-large;
+}
+.contrata {
+    background-color: rgb(0, 0, 0);
+    color: rgb(0, 0, 255);
+    padding: 20px 40px;
+    font-size: x-large;
+    position: absolute;
+    right: 350;
+    top: 30;
+}
