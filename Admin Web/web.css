@@ -8,20 +8,24 @@
     padding: 20px;
 }
 .inicio {
-    background-color: rgb(0, 0, 0);
-    color: rgb(0, 0, 255);
+    background-color: transparent;
+    color: seagreen;
     position: absolute;
     right: 600;
     top: 30;
     padding: 20px 40px;
     font-size: x-large;
+    border: none;
+    font-weight: bold;
 }
 .contrata {
-    background-color: rgb(0, 0, 0);
-    color: rgb(0, 0, 255);
-    padding: 20px 40px;
-    font-size: x-large;
+background-color: transparent;
+    color: seagreen;
     position: absolute;
     right: 350;
     top: 30;
+    padding: 20px 40px;
+    font-size: x-large;
+    border: none;
+    font-weight: bold;
 }
