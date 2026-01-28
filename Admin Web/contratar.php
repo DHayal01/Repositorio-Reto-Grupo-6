@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="web.css">
     <body>
     <div class="cabecera">
-    <h1 class="arriba">Bienvenido a EDID Solutions</h1>
+    <h1 class="arriba">EDID Solutions</h1>
     <a href="index.html">
     <button type="button" class="inicio">Inicio</button>
     </a>
@@ -14,6 +14,9 @@
     </a>
     <a href="quienes_somos.html">
     <button type="button" class="quienes_somos">Quiénes somos</button>
+    </a>
+    <a href="soporte.html">
+    <button type="button" class="soporte">Soporte</button>
     </a>
     <img src="logo_sin_texto.png" class="logo">
     </div>
@@ -38,6 +41,8 @@
     </form>
     </div>
     </body>
-</html>
+<footer class="pie">
+    <p>© 2026 EDID Solutions. Todos los derechos reservados.</p>
+</footer>
 <?php
 ?>
