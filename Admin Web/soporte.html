@@ -49,28 +49,45 @@
                     </label>
                 </div>
                 
-                <div class="opcion-soporte">
-                    <input type="radio" id="telefono" name="soporte" value="telefono">
-                    <label for="telefono">
-                        <span>📞</span>
-                        <span>Llamada telefónica</span>
-                        <span>Solicita que te llamemos</span>
-                    </label>
-                </div>
+                <div class="opcion-soporte opcion-telefono">
+    <input type="radio" id="telefono" name="soporte" value="telefono">
+    <label for="telefono">
+        <span>📞</span>
+        <span>Llamada telefónica</span>
+        <span>Solicita que te llamemos</span>
+    </label>
+
+    <div class="telefono-wrapper">
+        <select id="prefijo" name="prefijo" class="prefijo-telefono">
+            <option value="+34">+34</option>
+        </select>
+        <input type="tel"
+               id="telefono-input"
+               name="telefono-input"
+               placeholder="Tu número"
+               class="telefono-input"
+               pattern="[0-9]{6,15}">
+    </div>
+</div>
+
                 
                 <button type="button" class="btn-continuar" onclick="procesarSoporte()">Continuar</button>
             </form>
+
         </div>
         
         <div id="jitsi-container">
-            <button class="cerrar-video" onclick="cerrarVideollamada()">❌ Cerrar</button>
-            <iframe id="jitsi-iframe" allowfullscreen></iframe>
-
+            <button class="cerrar-video" onclick="cerrarVideollamada()">Cerrar</button>
+            <iframe id="jitsi-iframe"
+                    src="https://meet.jit.si/PSInformaticaSoporte"
+                    allowfullscreen
+                    muted>
+            </iframe>
         </div>
     </main>
     
     <footer class="pie">
-        <p>© 2026 EDID Solutions. Todos los derechos reservados.</p>
+        <p>2026 EDID Solutions. Todos los derechos reservados.</p>
     </footer>
     
     <script>
@@ -82,12 +99,9 @@
                 return;
             }
             
-            switch(seleccion.value) {
+            switch (seleccion.value) {
                 case 'videollamada':
                     abrirVideollamada();
-                    break;
-                case 'chat':
-                    alert('Función de chat próximamente disponible');
                     break;
                 case 'email':
                     window.location.href = 'mailto:soporte@edidsolutions.com';
@@ -97,25 +111,20 @@
                     break;
             }
         }
-        
+
         function abrirVideollamada() {
-            const roomName = 'PSInformatica_' + Date.now();
-            const jitsiUrl = 'https://meet.jit.si/' + roomName;
-            document.getElementById('jitsi-iframe').src = jitsiUrl;
             document.getElementById('jitsi-container').style.display = 'flex';
-}
+        }
 
         function cerrarVideollamada() {
-            document.getElementById('jitsi-iframe').src = '';
-                    document.getElementById('jitsi-container').style.display = 'none';
-}
+            document.getElementById('jitsi-container').style.display = 'none';
+        }
 
         document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-        cerrarVideollamada();
-    }
-});
-
+            if (e.key === 'Escape') {
+                cerrarVideollamada();
+            }
+        });
     </script>
 </body>
 </html>
