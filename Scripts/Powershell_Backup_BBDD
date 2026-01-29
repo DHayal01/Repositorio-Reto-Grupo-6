@@ -1,0 +1,63 @@
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$RDSHost = "cms-database.ct0kidrgn2ec.us-east-1.rds.amazonaws.com",  # Endpoint RDS ej. mydb.xxxx.eu-west-1.rds.amazonaws.com
+
+    [Parameter(Mandatory=$true)]
+    [string]$DBName = "wordpress_db",   # Nombre de la BD
+
+    [Parameter(Mandatory=$true)]
+    [string]$User = "admin",     # Usuario RDS
+
+    [Parameter(Mandatory=$true)]
+    [string]$LocalPath = "C:\Backups, # Ruta local
+
+    [string]$Region = "eu-east-1",  # Tu región AWS
+
+    [string]$ProfileName = "default",  # Perfil AWS credentials
+
+    [string]$MySQLBin = "C:\Program Files\MySQL\MySQL Server 8.0\bin"  # Ajusta tu ruta
+)
+
+# Configurar AWS (opcional, para validar endpoint)
+Set-AWSCredential -ProfileName $ProfileName
+Import-Module AWSPowerShell -Force
+
+# Variables
+$Timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$BackupFile = "$LocalPath\$DBName-backup-$Timestamp.sql"
+$LogFile = "$LocalPath\$DBName-backup-$Timestamp.log"
+$MySQLDump = "$MySQLBin\mysqldump.exe"
+
+if (-not (Test-Path $MySQLDump)) {
+    Write-Error "mysqldump.exe no encontrado en $MySQLDump. Instala MySQL Client."
+    exit 1
+}
+
+if (-not (Test-Path $LocalPath)) {
+    New-Item -ItemType Directory -Path $LocalPath -Force
+}
+
+# Comando mysqldump (pide password interactivo o usa .my.cnf)
+$DumpArgs = @(
+    "--host=$RDSHost",
+    "--user=$User",
+    "--single-transaction",
+    "--routines",
+    "--triggers",
+    "--lock-tables=false",  # Para BD activa como WooCommerce
+    "--quick",
+    $DBName,
+    ">", "`"$BackupFile`""
+)
+
+Write-Host "Iniciando backup de $DBName desde $RDSHost via VPN..." -Foreground Green
+Start-Process -FilePath "powershell" -ArgumentList "-Command", "& '$MySQLDump' --host=$RDSHost --user=$User --password $DBName > '$BackupFile' 2> '$LogFile'" -Wait -NoNewWindow -PassThru
+
+# Comprimir (opcional)
+$ZipFile = "$BackupFile.zip"
+Compress-Archive -Path $BackupFile -DestinationPath $ZipFile -Force
+Remove-Item $BackupFile -Force
+
+# Log
+"Backup completado: $ZipFile - $(Get-Item $ZipFile).Length bytes" | Out-File -Append $LogFile
+Write-Host "Backup guardado en $ZipFile. Log: $LogFile" -Foreground Green
