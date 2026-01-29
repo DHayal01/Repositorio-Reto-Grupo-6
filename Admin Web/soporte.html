@@ -1,33 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>EDID Solutions</title>
+    <title>Soporte - EDID Solutions</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="web.css">
 </head>
-
 <body>
-    <div class="cabecera">
-    <h1 class="arriba">EDID Solutions</h1>
-    <div class="botones">
-    <a href="">
-    <button type="button" class="inicio">Inicio</button>
-    </a>
-    <a href="contratar.php">
-    <button type="button" class="contrata">Contrátanos</button>
-    </a>
-    <a href="quienes_somos.html">
-    <button type="button" class="quienes_somos">Quiénes somos</button>
-    </a>
-    <a href="soporte.html">
-    <button type="button" class="soporte">Soporte</button>
-    </a>
-    <img src="logo_sin_texto.png" class="logo">
-    </div>
-    </div>
+    <header class="cabecera">
+        <h1 class="arriba">EDID Solutions</h1>
+        <div class="botones">
+            <a href="index.html">
+                <button type="button" class="inicio">Inicio</button>
+            </a>
+            <a href="contratar.php">
+                <button type="button" class="contrata">Contrátanos</button>
+            </a>
+            <a href="quienes_somos.html">
+                <button type="button" class="quienes_somos">Quiénes somos</button>
+            </a>
+            <a href="soporte.html">
+                <button type="button" class="soporte">Soporte</button>
+            </a>
+            <img src="imagenes/logo_sin_texto.png" class="logo" alt="Logo EDID Solutions">
+        </div>
+    </header>
     
-</body>  
-<footer class="pie">
-    <p>© 2026 EDID Solutions. Todos los derechos reservados.</p>
-</footer>
+    <main>
+        <div class="contenedor-soporte">
+            <h2 class="titulo-soporte">Centro de Soporte</h2>
+            <p class="descripcion-soporte">Selecciona el tipo de asistencia que necesitas</p>
+            
+            <form class="formulario-soporte">
+                <div>
+                    <input type="radio" id="videollamada" name="soporte" value="videollamada">
+                    <label for="videollamada">
+                        <span>📹</span>
+                        <span>Videollamada en vivo</span>
+                        <span>Conéctate con un agente mediante videoconferencia</span>
+                    </label>
+                </div>
+                
+                <div class="opcion-soporte">
+                    <input type="radio" id="chat" name="soporte" value="chat">
+                    <label for="chat">
+                        <span>💬</span>
+                        <span>Chat en línea</span>
+                        <span>Chatea con nuestro equipo de soporte</span>
+                    </label>
+                </div>
+                
+                <div class="opcion-soporte">
+                    <input type="radio" id="email" name="soporte" value="email">
+                    <label for="email">
+                        <span>✉️</span>
+                        <span>Enviar email</span>
+                        <span>Envíanos tu consulta y te responderemos pronto</span>
+                    </label>
+                </div>
+                
+                <div class="opcion-soporte">
+                    <input type="radio" id="telefono" name="soporte" value="telefono">
+                    <label for="telefono">
+                        <span>📞</span>
+                        <span>Llamada telefónica</span>
+                        <span>Solicita que te llamemos</span>
+                    </label>
+                </div>
+                
+                <button type="button" class="btn-continuar" onclick="procesarSoporte()">Continuar</button>
+            </form>
+        </div>
+        
+        <div id="jitsi-container">
+            <button class="cerrar-video" onclick="cerrarVideollamada()">❌ Cerrar</button>
+            <iframe id="jitsi-iframe" allowfullscreen></iframe>
+
+        </div>
+    </main>
+    
+    <footer class="pie">
+        <p>© 2026 EDID Solutions. Todos los derechos reservados.</p>
+    </footer>
+    
+    <script>
+        function procesarSoporte() {
+            const seleccion = document.querySelector('input[name="soporte"]:checked');
+            
+            if (!seleccion) {
+                alert('Por favor, selecciona una opción de soporte');
+                return;
+            }
+            
+            switch(seleccion.value) {
+                case 'videollamada':
+                    abrirVideollamada();
+                    break;
+                case 'chat':
+                    alert('Función de chat próximamente disponible');
+                    break;
+                case 'email':
+                    window.location.href = 'mailto:soporte@edidsolutions.com';
+                    break;
+                case 'telefono':
+                    alert('Solicitud de llamada registrada. Te contactaremos pronto.');
+                    break;
+            }
+        }
+        
+        function abrirVideollamada() {
+            const roomName = 'PSInformatica_' + Date.now();
+            const jitsiUrl = 'https://meet.jit.si/' + roomName;
+            document.getElementById('jitsi-iframe').src = jitsiUrl;
+            document.getElementById('jitsi-container').style.display = 'flex';
+}
+
+        function cerrarVideollamada() {
+            document.getElementById('jitsi-iframe').src = '';
+                    document.getElementById('jitsi-container').style.display = 'none';
+}
+
+        document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+        cerrarVideollamada();
+    }
+});
+
+    </script>
+</body>
 </html>
