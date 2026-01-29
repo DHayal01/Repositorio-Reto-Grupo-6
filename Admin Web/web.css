@@ -138,25 +138,277 @@ body {
     white-space: nowrap;
 }
 
-.formulario {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: 0 auto;
-    position: center;
-    padding: 20px;
-}
-
-main {
-    flex: 1;
-}
 
 .pie {
     background-color: #032c52;
     color: #0cd1da;
     text-align: center;
-    padding: clamp(10px, 2vw, 20px);
+    padding: clamp(10px, 2vw, 40px);
     width: 100%;
-    font-size: clamp(0.8rem, 2vw, 1rem);
+    font-size: clamp(0.8rem, 2vw, 1.5rem);
     margin-top: auto;
 }
+
+.contenedor-soporte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: clamp(20px, 4vw, 40px);
+}
+.form{
+    width: 300px;
+    border-color: black;
+    border-radius: 20px;
+}
+.formulario {
+    display: flex;
+    justify-content: center;
+    margin: 40px 20px;
+}
+
+.formulario1 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    border-style: groove;
+    background-color: #f9f9f9;
+}
+
+.titulo_contrata {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 20px;
+    text-align: center;
+    color: #032c52;
+    font-weight: bold;
+}
+
+.label_contrata {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #032c52;
+    font-size: 0.95rem;
+}
+
+.input_contrata,
+input[type="text"],
+input[type="email"],
+input[type="datetime-local"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0cd1da;
+    box-shadow: 0 0 5px rgba(12, 209, 218, 0.3);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.boton_contrata {
+    width: 100%;
+    padding: 12px;
+    background-color: #0cd1da;
+    color: #032c52;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.boton_contrata:hover {
+    background-color: #0ab8c7;
+}
+
+.boton_contrata:active {
+    background-color: #089aa9;
+}
+
+.contenedor-soporte {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.titulo-soporte {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: #032c52;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.descripcion-soporte {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.formulario-soporte {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+}
+
+.opcion-soporte {
+    display: flex;
+    align-items: flex-start;
+}
+
+.formulario-soporte div {
+    display: flex;
+    align-items: flex-start;
+}
+
+.formulario-soporte input[type="radio"] {
+    margin-top: 5px;
+    margin-right: 15px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    accent-color: #0cd1da;
+}
+
+.formulario-soporte label {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    flex: 1;
+    gap: 5px;
+}
+
+.formulario-soporte label span:first-child {
+    font-size: 1.8rem;
+}
+
+.formulario-soporte label span:nth-child(2) {
+    font-weight: 600;
+    color: #032c52;
+    font-size: 1rem;
+}
+
+.formulario-soporte label span:nth-child(3) {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.btn-continuar {
+    width: 100%;
+    padding: 14px;
+    background-color: #0cd1da;
+    color: #032c52;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.btn-continuar:hover {
+    background-color: #0ab8c7;
+}
+
+.btn-continuar:active {
+    background-color: #089aa9;
+}
+
+#jitsi-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+#jitsi-iframe {
+    width: 90%;
+    height: 85%;
+    max-width: 1200px;
+    border: none;
+    border-radius: 10px;
+}
+
+.cerrar-video {
+    padding: 10px 20px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    transition: background-color 0.3s;
+}
+
+.cerrar-video:hover {
+    background-color: #cc0000;
+}
+
+
+.redes-sociales {
+    display: flex;
+    gap: clamp(15px, 3vw, 100px);
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+
+
+.titulo-seccion{
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: bold;
+    color: #032c52;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 100px;
+}
+
+.seccion-redes {
+    margin-top: auto;
+    padding: 0;
+    width: 100%;
+    right: 50px;
+}   
