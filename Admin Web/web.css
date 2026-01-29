@@ -412,3 +412,50 @@ textarea {
     width: 100%;
     right: 50px;
 }   
+.opcion-telefono {
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.telefono-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.prefijo-telefono {
+    padding: 10px 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    background-color: #fff;
+    min-width: 80px;
+}
+
+.telefono-input {
+    flex: 1;
+    min-width: 140px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95rem;
+}
+
+.telefono-input:focus,
+.prefijo-telefono:focus {
+    outline: none;
+    border-color: #0cd1da;
+    box-shadow: 0 0 5px rgba(12, 209, 218, 0.3);
+}
+
+@media (max-width: 600px) {
+    .telefono-wrapper {
+        width: 100%;
+    }
+
+    .prefijo-telefono {
+        max-width: 90px;
+    }
+}

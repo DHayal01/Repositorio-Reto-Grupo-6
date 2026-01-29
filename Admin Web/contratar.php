@@ -39,7 +39,7 @@
     </div>
     </body>
 <footer class="pie">
-    <p>© 2026 EDID Solutions. Todos los derechos reservados.</p>
+    <p>2026 EDID Solutions. Todos los derechos reservados.</p>
 </footer>
 <?php
 ?>
