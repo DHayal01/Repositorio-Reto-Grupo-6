@@ -211,6 +211,78 @@ aws rds create-db-instance \
   --tags Key=Name,Value="wordpress_db"
 
 echo "Instancia RDS MySQL creada exitosamente."
+# ============================
+# AWS WAF: WEB ACL + ASOCIACIÓN
+# ============================
+
+echo "Creando Web ACL de AWS WAF..."
+
+WEB_ACL_ARN=$(aws wafv2 create-web-acl \
+  --name waf-edid-2025 \
+  --scope REGIONAL \
+  --region $REGION \
+  --default-action Allow={} \
+  --rules '[
+    {
+      "Name": "RateLimit",
+      "Priority": 0,
+      "Statement": {
+        "RateBasedStatement": {
+          "Limit": 2000,
+          "AggregateKeyType": "IP"
+        }
+      },
+      "Action": { "Block": {} },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "RateLimit"
+      }
+    },
+    {
+      "Name": "AWSManagedRulesCommonRuleSet",
+      "Priority": 1,
+      "OverrideAction": { "None": {} },
+      "Statement": {
+        "ManagedRuleGroupStatement": {
+          "VendorName": "AWS",
+          "Name": "AWSManagedRulesCommonRuleSet"
+        }
+      },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "AWSManagedRulesCommonRuleSet"
+      }
+    },
+    {
+      "Name": "AWSManagedRulesSQLiRuleSet",
+      "Priority": 2,
+      "OverrideAction": { "None": {} },
+      "Statement": {
+        "ManagedRuleGroupStatement": {
+          "VendorName": "AWS",
+          "Name": "AWSManagedRulesSQLiRuleSet"
+        }
+      },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "AWSManagedRulesSQLiRuleSet"
+      }
+    }
+  ]'\
+  --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=waf-edid-metrics \
+  --query 'Summary.ARN' \
+  --output text)
+
+echo "Web ACL creado: $WEB_ACL_ARN"
+if [ -z "$WEB_ACL_ARN" ]; then
+  echo "ERROR: No se ha podido crear el Web ACL."
+  exit 1
+fi
+
+echo "✅ WAF asociado al ALB correctamente"
 
 echo "-----------------------------------------"
 echo "✅ La infraestructura de AWS ha sido creada con éxito ✅"
