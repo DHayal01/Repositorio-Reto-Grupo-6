@@ -8,7 +8,7 @@ echo "Montando infraestructura de AWS ..."
 # VARIABLES GLOBALES
 # =======================
 
-KEY_NAME="6" #METE TU CONTRASEÑA!!!!!!!!
+KEY_NAME="natali" #METE TU CONTRASEÑA!!!!!!!!
 VPC_NAME="vpc-edid-2025-grupo6"
 DB_SUBNET_GROUP_NAME="subnet-group-edid"
 REGION="us-east-1"
@@ -223,6 +223,56 @@ WEB_ACL_ARN=$(aws wafv2 create-web-acl \
   --scope REGIONAL \
   --region $REGION \
   --default-action Allow={} \
+  --rules '[
+    {
+      "Name": "RateLimit",
+      "Priority": 0,
+      "Statement": {
+        "RateBasedStatement": {
+          "Limit": 2000,
+          "AggregateKeyType": "IP"
+        }
+      },
+      "Action": { "Block": {} },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "RateLimit"
+      }
+    },
+    {
+      "Name": "AWSManagedRulesCommonRuleSet",
+      "Priority": 1,
+      "OverrideAction": { "None": {} },
+      "Statement": {
+        "ManagedRuleGroupStatement": {
+          "VendorName": "AWS",
+          "Name": "AWSManagedRulesCommonRuleSet"
+        }
+      },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "AWSManagedRulesCommonRuleSet"
+      }
+    },
+    {
+      "Name": "AWSManagedRulesSQLiRuleSet",
+      "Priority": 2,
+      "OverrideAction": { "None": {} },
+      "Statement": {
+        "ManagedRuleGroupStatement": {
+          "VendorName": "AWS",
+          "Name": "AWSManagedRulesSQLiRuleSet"
+        }
+      },
+      "VisibilityConfig": {
+        "SampledRequestsEnabled": true,
+        "CloudWatchMetricsEnabled": true,
+        "MetricName": "AWSManagedRulesSQLiRuleSet"
+      }
+    }
+  ]'\
   --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=waf-edid-metrics \
   --query 'Summary.ARN' \
   --output text)
