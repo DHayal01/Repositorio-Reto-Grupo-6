@@ -1,23 +1,4 @@
 #!/bin/bash
-
-# Parámetros
-SRC_HOST="192.168.100.1" 
-SRC_PORT="3306"
-SRC_USER="root"
-SRC_DB="edidbd"
-
-# Destino 1: backup AWS subred privada (misma VPC)
-DST1_HOST="192.168.101.2"  
-DST1_PORT="3306"
-DST1_USER="root"
-DST1_DB="edidbd"
-
-# Destino 2: backup on-premise
-DST2_HOST="192.168.150.2"  
-DST2_PORT="3306"
-DST2_USER="root"
-DST2_DB="edidbd"
-
 # Log
 LOG_FILE="/backup/logs/mysql_replica.log"
 NOW="$(date '+%Y-%m-%d %H:%M:%S')"
